@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="productDetailMapper">
+
+	<!-- num의 최대값 -->
+	<select id="maxNum" resultType="int">
+		select nvl(max(dnum),0) from product_detail
+	</select>
+
+	<!-- 데이터 입력 -->
+	<insert id="insertData"
+		parameterType="com.goople.shopping.ProductDetailDTO">
+		insert into product_detail
+		(dnum,dcompany,dname,dsubject,dcontent,dimg,dsellcount,damount,dmodel,dprice,dstate,dspec,dsize,detc)
+		values
+		(#{dnum},#{dcompany},#{dname},#{dsubject},#{dcontent},#{dimg},#{dsellcount},#{damount},#{dmodel},#{dprice},#{dstate},#{dspec},#{dsize},#{detc})
+	</insert>
+
+	<!-- 전체데이터 갯수 -->
+	<select id="getDataCount" parameterType="hashMap"
+		resultType="int">
+		select nvl(count(*),0) from product_detail
+		where ${searchKey} like '%' || #{searchValue} || '%'
+	</select>
+
+	<!-- 전체데이터 -->
+	<select id="getLists" parameterType="hashMap"
+		resultType="com.goople.shopping.ProductDetailDTO">
+		select * from(
+		select rownum rnum, data.* from (
+		select
+		dnum,dcompany,dname,dsubject,dcontent,dimg,dsellcount,damount,dmodel,dprice,dstate,dspec,dsize,detc
+		from product_detail
+		where ${searchKey} like '%' || #{searchValue} || '%'
+		order by dnum desc) data)
+<![CDATA[
+	where rnum>=#{start} and rnum<=#{end}
+]]>
+	</select>
+
+
+	<!-- 한개의 데이터 -->
+	<select id="getReadData" parameterType="String"
+		resultType="com.goople.shopping.ProductDetailDTO">
+		select
+		dnum,dcompany,dname,dsubject,dcontent,dimg,dsellcount,damount,dmodel,dprice,dstate,dspec,dsize,detc
+		from product_detail
+		where dmodel=#{dmodel}
+	</select>
+
+	<!-- 데이터 수정 -->
+	<update id="updateData"
+		parameterType="com.goople.shopping.ProductDetailDTO">
+		update product_detail set
+		dnum=#{dnum},dcompany=#{dcompany},dname=#{dname},dsubject=#{dsubject},dcontent=#{dcontent},dimg=#{dimg}
+		,pstate=#{pstate},img=#{img},
+		dsellcount=#{dsellcount},damount=#{damount},dmodel=#{dmodel},dprice=#{dprice},dstate=#{dstate},dspec=#{dspec},dsize=#{dsize},detc=#{detc}
+		where dnum=#{dnum}
+	</update>
+
+	<!-- 데이터 삭제 -->
+	<delete id="deleteData" parameterType="String">
+		delete product_detail where dmodel=#{dmodel}
+	</delete>
+
+	<!-- 검색 데이터 갯수 -->
+	<select id="getModelDataCount" parameterType="hashMap"
+		resultType="int">
+		select nvl(count(*),0) from product_detail
+		where ${searchKey} like '%' || #{searchValue} || '%'
+	</select>
+
+	<!-- 재고 빼기 -->
+	<update id="minusAmount" parameterType="hashMap">
+		update product_detail set damount=damount-#{damount} where dmodel=#{dmodel}
+	</update>
+
+	<!-- 판매숫자 올리기 -->
+	<update id="addSellCount" parameterType="hashMap">
+		update product_detail set dsellcount=dsellcount+#{dsellcount} where
+		dmodel=#{dmodel}
+	</update>
+
+
+</mapper>

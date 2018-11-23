@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="refundMapper">
+
+	<!-- num의 최대값 -->
+	<select id="maxOrderNum" resultType="int">
+		select nvl(max(ordernum),0) from refund 
+	</select>
+
+	<!-- 전체 데이터의 갯수 -->
+	<select id="getDataCount" parameterType="hashMap"
+		resultType="int">
+		select nvl(count(*),0) from refund
+		where ${searchKey} like '%' || #{searchValue} || '%'
+	</select>
+
+	<!-- 전체 데이터 -->
+	<select id="getLists" parameterType="hashMap"
+		resultType="com.goople.refund.RefundDTO">
+		select * from (
+		select rownum rnum, data.* from (
+		select id, ordernum, pcompany, pname, model, price, pamount, totalprice, state,to_char(orderdate,'YYYY-MM-DD HH24:MI:SS') orderdate 
+		from refund
+		where ${searchKey} like '%' || #{searchValue} || '%'
+		order by ordernum desc) data)
+<![CDATA[
+	where rnum>=#{start} and rnum<=#{end}
+]]>
+	</select>
+	
+	<!-- 내 데이터 조회 -->
+	<select id="getListsById" parameterType="hashMap"
+		resultType="com.goople.refund.RefundDTO">
+		select * from (
+		select rownum rnum, data.* from (
+		select id, ordernum, pcompany, pname, model, price, pamount, totalprice, state, orderdate
+		from refund
+		where ${searchKey} like '%' || #{searchValue} || '%'
+		order by orderdate desc) data)
+<![CDATA[
+	where rnum>=#{start} and rnum<=#{end}
+]]>
+	</select>
+
+	<!-- 한 개의 데이터 -->
+	<select id="getReadData" parameterType="int"
+		resultType="com.goople.refund.RefundDTO">
+		select id, ordernum, pcompany, pname, model, price, pamount, totalprice, state, orderdate
+		from refund where ordernum=#{ordernum}
+	</select>
+
+	<!-- 환불상태 수정 -->
+	<update id="updateData" parameterType="hashMap">
+		update refund set state=#{state} where ordernum=#{ordernum} and model=#{model}
+	</update>
+
+	<!-- 데이터 삭제 -->
+	<delete id="deleteData" parameterType="hashMap">
+		delete refund where model=#{model} and ordernum=#{ordernum}
+	</delete>
+	
+	<!-- 데이터 입력 -->
+	<insert id="insertRefundData" parameterType="hashMap">
+		insert into refund (id, ordernum, pcompany, pname, model, price, pamount, totalprice, state, orderdate)
+		values(#{id},#{ordernum},#{pcompany},#{pname},#{model},#{price},#{pamount},#{totalprice},#{state},TO_DATE(#{orderdate},'YYYY-MM-DD HH24:MI:SS'))
+	</insert>
+</mapper>

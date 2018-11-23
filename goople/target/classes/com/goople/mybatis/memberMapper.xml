@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="memberMapper">
+
+	<insert id="memberinsert"  parameterType="com.goople.member.MemberDTO">
+		insert into member (id,pwd,name,address,address1,address2,address3,zipcode,gender,phone,phone1,phone2,emailid,emailad,birth,birth1,birth2)
+		values (#{id},#{pwd},#{name},#{address},#{address1},#{address2},#{address3},#{zipcode},#{gender},#{phone},#{phone1},#{phone2},#{emailid},#{emailad},#{birth},#{birth1},#{birth2})
+	</insert>
+	
+	
+	<select id="memberselect"   parameterType="com.goople.member.MemberDTO"  resultType="com.goople.member.MemberDTO">
+		select id,pwd,name,address,address1,address2,address3,zipcode,phone,phone1,phone2,emailid,emailad from member where id=#{id} and pwd=#{pwd}	
+	</select>
+	
+	<select id="membercheck"   parameterType="String"  resultType="int">
+		select count(id) from member where id=#{id}
+	</select>
+	
+	<update  id="memberupdate"  parameterType="com.goople.member.MemberDTO" >
+		 update member set name=#{name}, pwd=#{pwd}, emailid=#{emailid}, emailad=#{emailad}, address=#{address},
+		 address1=#{address1}, address2=#{address2}, address3=#{address3}, zipcode=#{zipcode},
+		 phone=#{phone}, phone1=#{phone1}, phone2=#{phone2} where id=#{id} 	                         
+	</update>   	
+	
+	<select id="searchmember"  parameterType="string"  resultType="com.goople.member.MemberDTO">    <!-- update 관련된 sql문 -->	
+		select * from member where  id=#{id} 
+	</select>
+	
+	
+	<delete id="memberdelete"  parameterType="com.goople.member.MemberDTO">
+		 delete from Member where id = #{id} and pwd = #{pwd} 
+	</delete>
+	
+	<select id="idcheck" parameterType="String"  resultType="com.goople.member.MemberDTO" >
+		 select  id,pwd,name,address,address1,address2,address3,zipcode,phone,phone1,phone2,emailid,emailad from member
+		 where id=#{id}
+	</select>
+	
+	<select id="logincheck" parameterType="com.goople.member.MemberDTO"  resultType="com.goople.member.MemberDTO">
+		 select  id,pwd,name,address,address1,address2,address3,zipcode,phone,phone1,phone2,emailid,emailad from member
+		 where id=#{id} and pwd=#{pwd}
+	</select>
+	
+	<select id="id"  parameterType="com.goople.member.MemberDTO"  resultType="String">
+		select  id from member
+		where name=#{name} and  phone=#{phone} and phone1=#{phone1} and phone2=#{phone2}
+	</select>
+	
+	<select id="pwd" parameterType="com.goople.member.MemberDTO"  resultType="String">
+		select pwd from member
+		where id=#{id} and name=#{name}
+	</select>
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>
+

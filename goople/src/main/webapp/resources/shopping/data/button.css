@@ -1,0 +1,29 @@
+@charset "EUC-KR";
+
+.btn {
+	background-color:transparent;
+	-webkit-border-top-left-radius:12px;
+	-moz-border-radius-topleft:12px;
+	border-top-left-radius:12px;
+	-webkit-border-top-right-radius:12px;
+	-moz-border-radius-topright:12px;
+	border-top-right-radius:12px;
+	-webkit-border-bottom-right-radius:12px;
+	-moz-border-radius-bottomright:12px;
+	border-bottom-right-radius:12px;
+	-webkit-border-bottom-left-radius:12px;
+	-moz-border-radius-bottomleft:12px;
+	border-bottom-left-radius:12px;
+	border:1px solid #d1cfd1;
+	display:inline-block;
+	color:#777777;
+	font-family:Arial;
+	font-size:15px;
+	font-style:normal;
+	text-align:center;
+	height:83px;
+	width:174px;
+	line-height: 65px;
+}.btn:active {
+	position:relative;
+}</style>

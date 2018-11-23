@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="productMapper">
+
+<!-- num의 최대값  -->
+<select id="maxNum" resultType="int">
+	select nvl(max(num),0) from product
+</select>
+
+<!-- 데이터 입력 -->
+<insert id="insertData" parameterType="com.goople.shopping.ProductDTO">
+	insert into product (num,company,pname,subject,content,price,pamount,pstate,img,model,spec,psize,etc) values 
+	(#{num},#{company},#{pname},#{subject},#{content},#{price},#{pamount},#{pstate},#{img},#{model},#{spec},#{psize},#{etc})
+</insert>
+
+<!-- 애플 전체데이터 갯수 -->
+<select id="getAppleDataCount" parameterType="hashMap" resultType="int">
+	select nvl(count(*),0) from product
+	where ${searchKey} like '%' || #{searchValue} || '%'
+	and company='애플'
+</select>
+<!-- 구글  전체데이터 갯수 -->
+<select id="getGoogleDataCount" parameterType="hashMap" resultType="int">
+	select nvl(count(*),0) from product
+	where ${searchKey} like '%' || #{searchValue} || '%'
+	and company='구글'
+</select>
+<!--  전체데이터 갯수 -->
+<select id="getDataCount" parameterType="hashMap" resultType="int">
+	select nvl(count(*),0) from product
+	where ${searchKey} like '%' || #{searchValue} || '%'
+</select>
+
+<!-- 전체데이터   -->
+<select id="getLists" parameterType="hashMap" resultType="com.goople.shopping.ProductDTO">
+	select * from(
+	select rownum rnum, data.* from (
+	select num,company,pname,subject,content,price,pamount,pstate,img,model,spec,psize,etc from product
+	where ${searchKey} like '%' || #{searchValue} || '%'
+	order by num desc) data)
+<![CDATA[
+	where rnum>=#{start} and rnum<=#{end}
+]]>
+</select>
+
+<!-- 한개의 데이터 -->
+<select id="getReadData" parameterType="int" resultType="com.goople.shopping.ProductDTO">
+	select num,company,pname,price,subject,content,pamount,pstate,img,model,spec,psize,etc from product
+	where num=#{num}
+</select>
+
+<!-- 모델 명으로 데이터 조회 -->
+<select id="getReadDataByModel" parameterType="String" resultType="com.goople.shopping.ProductDTO">
+	select num,company,pname,price,subject,content,pamount,pstate,img,model,spec,psize,etc from product
+	where model=#{model}
+</select>
+
+<!-- 데이터 수정 -->
+<update id="updateData" parameterType="com.goople.shopping.ProductDTO">
+	update product set num=#{num},company=#{company},pname=#{pname},price=#{price},subject=#{subject},content=#{content},pamount=#{pamount} ,pstate=#{pstate},img=#{img},model=#{model},
+	spec=#{spec},psize=#{psize},etc=#{etc}
+ 	where num=#{num}
+</update>
+
+<!-- 데이터 삭제 -->
+<delete id="deleteData" parameterType="String">
+	delete product where model=#{model}
+</delete>
+
+<!-- 재고 빼기 -->
+<update id="minusAmount" parameterType="hashMap">
+	update product set pamount=pamount-#{pamount} where model=#{model}
+</update>
+
+<!-- 애플데이터  -->
+<select id="getAppleLists" parameterType="hashMap" resultType="com.goople.shopping.ProductDTO">
+	select * from(
+	select rownum rnum, data.* from (
+	select num,company,pname,subject,content,price,pamount,pstate,img,model,spec,psize,etc from product
+	where ${searchKey} like '%' || #{searchValue} || '%' and
+	company like '애플' 
+	order by num) data)
+<![CDATA[
+	where rnum>=#{start} and rnum<=#{end}
+]]>
+</select>
+
+<!-- 구글데이터  -->
+<select id="getGoogleLists" parameterType="hashMap" resultType="com.goople.shopping.ProductDTO">
+	select * from(
+	select rownum rnum, data.* from (
+	select num,company,pname,subject,content,price,pamount,pstate,img,model,spec,psize,etc from product
+	where ${searchKey} like '%' || #{searchValue} || '%' and
+	company like '구글' 
+	order by num) data)
+<![CDATA[
+	where rnum>=#{start} and rnum<=#{end}
+]]>
+</select>
+
+</mapper>

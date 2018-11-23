@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="orderMapper">
+
+<!-- 한 명의 회원 주문 데이터 -->
+<select id="getOrderData" parameterType="String" resultType="com.goople.order.OrderDTO">
+	select id,ordernum,company,pname,model,price,amount,totalprice,state,orderdate from orderstate where id=#{id}
+</select>
+
+<!-- 한 명의 회원 상세 주문 데이터 -->
+<select id="getOrderDataDetail" parameterType="hashMap" resultType="com.goople.order.OrderDTO">
+	select id,ordernum,company,pname,model,price,amount,totalprice,state,orderdate from orderstate where id=#{id} and model=#{model} and ordernum=#{ordernum}
+</select>
+
+<!-- 주문번호 최대값 -->
+<select id="maxOrderNum" resultType="int">
+	select nvl(max(ordernum),0) from orderstate
+</select>
+
+<!-- 데이터 입력 -->
+<insert id="insertOrderData" parameterType="com.goople.order.OrderDTO">
+	insert into orderstate (id,ordernum,company,pname,model,price,amount,totalprice,state,orderdate) 
+	values(#{id},#{ordernum},#{company},#{pname},#{model},#{price},#{amount},#{price}*#{amount},#{state},sysdate)
+</insert>
+
+<!-- 전체 데이터 -->
+<select id="getLists" parameterType="hashMap"
+	resultType="com.goople.order.OrderDTO">
+	select * from (
+	select rownum rnum, data.* from (
+	select id, ordernum, company, pname, model, price, amount, state,to_char(orderdate,'YYYY-MM-DD HH24:MI:SS') orderdate
+	from orderstate
+	where ${searchKey} like '%' || #{searchValue} || '%'
+		order by orderdate desc) data)
+</select>
+	
+<!-- 전체 데이터의 갯수 -->
+<select id="getDataCount" parameterType="hashMap"
+	resultType="int">
+	select nvl(count(*),0) from orderstate
+	where ${searchKey} like '%' || #{searchValue} || '%'
+</select>
+
+<!-- 배송상태 수정 -->
+<update id="updateData" parameterType="hashMap">
+	update orderstate set state=#{state} where ordernum=#{ordernum} and model=#{model}
+</update>
+
+<!-- 데이터 삭제 -->
+<delete id="deleteData" parameterType="hashMap">
+	delete orderstate where model=#{model} and ordernum=#{ordernum}
+</delete>
+
+</mapper>

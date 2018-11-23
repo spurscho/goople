@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+
+<configuration>
+<properties>
+	<property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+	<property name="url" value="jdbc:oracle:thin:@192.168.16.32:TestDB"/>
+	<property name="username" value="goople"/>
+	<property name="password" value="1031"/>
+</properties>
+
+<environments default="development">
+	<environment id="development">
+		<transactionManager type="JDBC"/>
+		<dataSource type="POOLED">
+			<property name="driver" value="${driver}"/>
+			<property name="url" value="${url}"/>
+			<property name="username" value="${username}"/>
+			<property name="password" value="${password}"/>
+		</dataSource>
+	</environment>
+	
+</environments>
+
+<mappers>
+	<mapper resource="com/goople/mybatis/memberMapper.xml"/>
+	<mapper resource="com/goople/mybatis/orderMapper.xml"/>
+	<mapper resource="com/goople/mybatis/productMapper.xml"/>
+	<mapper resource="com/goople/mybatis/refundMapper.xml"/>
+	<mapper resource="com/goople/mybatis/productDetailMapper.xml"/>
+	<mapper resource="com/goople/mybatis/cartMapper.xml"/>
+</mappers>
+
+</configuration>
